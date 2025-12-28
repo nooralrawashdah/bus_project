@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+// use App\Models\Trip;  <-- افترضنا وجود مودل للرحلات
+// use App\Models\Bus;   <-- افترضنا وجود مودل للباصات
+
+class DriverController extends Controller
+{
+    public function index()
+    {
+        // بيانات تجريبية (يتم جلبها عادة من قاعدة البيانات عبر Auth::user())
+        $driver = [
+            'name' => 'Ahmed Mohammed',
+            'license' => 'DRV-2023-001',
+            'rating' => 4.8
+        ];
+
+        $bus = [
+            'number' => 'BUS-101',
+            'capacity' => 45,
+            'type' => 'Mercedes Coach',
+            'status' => 'Ready'
+        ];
+
+        // جلب الرحلة الحالية (أول رحلة لم تبدأ بعد أو قيد التنفيذ)
+        $currentTrip = (object)[
+            'id' => 101,
+            'route' => 'City Center → University',
+            'seats_booked' => 45, // جرب تغيير الرقم لـ 30 لرؤية اختلاف الحالة
+            'status' => 'ready', // ready, in_progress, upcoming
+            'time' => '08:00 AM'
+        ];
+
+        // قائمة الرحلات لليوم
+        $todayTrips = [
+            ['id' => 101, 'route' => 'City Center → University', 'time' => '08:00 AM', 'seats' => '45/45', 'status' => 'Ready'],
+            ['id' => 102, 'route' => 'University → Mall', 'time' => '02:00 PM', 'seats' => '30/45', 'status' => 'Upcoming'],
+            ['id' => 103, 'route' => 'Mall → Airport', 'time' => '06:00 PM', 'seats' => '15/45', 'status' => 'Upcoming'],
+        ];
+
+        return view('driver.dashboard', compact('driver', 'bus', 'currentTrip', 'todayTrips'));
+    }
+
+    public function startTrip($id)
+    {
+        // هنا يتم تحديث حالة الرحلة في قاعدة البيانات إلى "Started"
+        // Trip::where('id', $id)->update(['status' => 'in_progress']);
+        
+        return back()->with('success', 'Trip started successfully!');
+    }
+
+    public function endTrip($id)
+    {
+        // هنا يتم تحديث حالة الرحلة في قاعدة البيانات إلى "Completed"
+        // Trip::where('id', $id)->update(['status' => 'completed']);
+        
+        return back()->with('success', 'Trip ended successfully!');
+    }
+}
