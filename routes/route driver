@@ -1,0 +1,11 @@
+use App\Http\Controllers\DriverController;
+use Illuminate\Support\Facades\Route;
+
+Route::prefix('driver')->group(function () {
+    // عرض لوحة التحكم
+    Route::get('/dashboard', [DriverController::class, 'index'])->name('driver.dashboard');
+    
+    // عمليات التحكم في الرحلة
+    Route::post('/trip/start/{id}', [DriverController::class, 'startTrip'])->name('driver.trip.start');
+    Route::post('/trip/end/{id}', [DriverController::class, 'endTrip'])->name('driver.trip.end');
+});
